@@ -1,8 +1,12 @@
 
-import sqlite3
+import mysql.connector as mysql
 
-database = ""
-conn = sqlite3.connect(database)
+
+conn = mysql.connect(host='localhost',
+                     user='nadavdrori',
+                     password='nadavdror61892',
+                     db='nadavdrori',
+                     port=3305)
 cursor = conn.cursor()
 
 movies = f"CREATE TABLE Movies (id INTEGER NOT NULL" \
@@ -39,13 +43,16 @@ movie_keywords = f"CREATE TABLE MovieKeywords (movie_id INTEGER NOT NULL" \
                  f");"
 
 cursor.execute(movies)
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
 cursor.execute(genre)
 cursor.execute(movie_genre)
 cursor.execute(keywords)
 cursor.execute(movie_keywords)
 
-result = cursor.fetchall()
 
+cursor.close()
 conn.close()
 
 

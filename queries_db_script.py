@@ -1,6 +1,7 @@
-import sqlite3
+import mysql.connector as mysql
 
-conn = sqlite3.connect(database)
+
+conn = mysql.connect()
 cursor = conn.cursor()
 
 
@@ -21,13 +22,26 @@ def query_2(movie_name):
     return query
 
 
-def query_3(genre, budget, revenue):
+def query_3(genre, profit):
     query = f"SELECT Movies.name AS name, Movies.budget AS budget, Movies.revenue AS revenue," \
             f" (Movies.revenue-Movies.budget) AS profit" \
             f"FROM Movies, Genre, MovieGenre" \
-            f"WHERE Movies.id IN = (SELECT Movies.id" \
-            f"                      FROM Movies, Genre, MovieGenre" \
-            f"                      WHERE Genre.name = '{genre}' AND MovieGenre.genre_id = Genre.id AND " \
-            f"                            MovieGenre.movie_id = Movies.id) AND" \     
+            f"WHERE Movies.id IN (SELECT Movies.id" \
+            f"                    FROM Movies, Genre, MovieGenre" \
+            f"                    WHERE Genre.name = '{genre}' AND MovieGenre.genre_id = Genre.id AND " \
+            f"                          MovieGenre.movie_id = Movies.id) AND " \
+            f"                          (Movies.revenue-Movies.budget) = '{profit}'" \ 
             f"      ORDER BY profit DESC"
     return query
+
+
+def query_4(genre):
+    query = f"SELECT Genre.name AS genre, AVG((Movies.revenue - Movies.budget)) AS profit" \
+            f"FROM Movies, Genre, MovieGenre" \
+            f"WHERE Genre.name = '{genre}' AND MovieGenre.genre_id = Genre.id AND MovieGenre.movie_id = Movies.id" \
+            f"GROUP BY Genre.name"
+    return query
+
+
+
+
