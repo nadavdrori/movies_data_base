@@ -5,6 +5,7 @@ import sqlite3
 CSV_FILE_NAME = 'tmdb_5000_movies.csv'
 MOVIES_TABLE_NAME = 'Movies'
 GENRES_TABLE_NAME = 'Genres'
+KEYWORDS_TABLE_NAME = 'Keywords'
 MOVIE_GENRE_TABLE_NAME = 'MovieGenre'
 MOVIE_KEYWORD_TABLE_NAME = 'MovieKeyword'
 
@@ -29,40 +30,105 @@ def get_unique_id_name(row_tuples):
         json_id_name_list = json.loads(row_tuple[0])  # Access the first and only object of each tuple
         for json_id_name in json_id_name_list:  # Iterate through the (id, name) objects
             id_name_set.add((json_id_name['id'], json_id_name['name']))
-    print(len(id_name_set))
+
     return list(id_name_set)
 
 
-def insert_data_movies(cur):
+def validate_unique_id(tuples, table):  # Validate uniqueness of primary key values
+    id_set = set()
+    for id_value_tuple in tuples:
+        if id_value_tuple[0] in id_set:
+            raise f'Non unique id found {id_value_tuple[0]} in {table}'
+        id_set.add(id_value_tuple[0])
+
+
+def populate_movies(cur=None):
     movie_tuples = get_tuples_by_columns(['id', 'title', 'vote_average', 'budget', 'revenue'])
-    cur.executemany(f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (?, ?, ?, ?, ?);',
-                    movie_tuples)
+    validate_unique_id(movie_tuples, 'movies')
+    if cur:
+        cur.executemany(f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (?, ?, ?, ?, ?);', movie_tuples)
+
+    print(f'Inserting {len(movie_tuples)} rows to {MOVIES_TABLE_NAME}')
+
+    return movie_tuples
 
 
-def insert_data_genre(cur):
+def populate_genre(cur=None):
     all_genres = get_tuples_by_columns(['genres'])
     unique_genres_tuples = get_unique_id_name(all_genres)
-    cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (?, ?);', unique_genres_tuples)
+    validate_unique_id(unique_genres_tuples, 'genres')
+    if cur:
+        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (?, ?);', unique_genres_tuples)
+
+    print(f'Inserting {len(unique_genres_tuples)} rows to {GENRES_TABLE_NAME}')
+
+    return unique_genres_tuples
 
 
-def insert_data_keyword(cur):
+def populate_keyword(cur=None):
     all_keywords = get_tuples_by_columns(['keywords'])
     unique_keywords_tuples = get_unique_id_name(all_keywords)
-    cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (?, ?);', unique_keywords_tuples)
+    validate_unique_id(unique_keywords_tuples, 'keywords')
+
+    if cur:
+        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (?, ?);', unique_keywords_tuples)
+
+    print(f'Inserting {len(unique_keywords_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
+
+    return unique_keywords_tuples
+
+
+def populate_movie_genre(cur=None):
+    movie_id_movie_genre = get_tuples_by_columns(['id', 'genres'])
+    movie_id_genre_id_tuples = []
+
+    for movie_id_movie_genre_row in movie_id_movie_genre:
+        movie_id = movie_id_movie_genre_row[0]                     # Access movie id of the tuple
+        json_genre_list = json.loads(movie_id_movie_genre_row[1])  # Access genre list of the tuple
+
+        for json_genre_id_name in json_genre_list:                 # Iterate through the (id, name) objects
+            movie_id_genre_id_tuples.append((int(movie_id), json_genre_id_name['id']))
+
+    if cur:
+        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (?, ?);', movie_id_genre_id_tuples)
+
+    print(f'Inserting {len(movie_id_genre_id_tuples)} rows to {MOVIE_GENRE_TABLE_NAME}')
+
+    return movie_id_genre_id_tuples
+
+
+def populate_movie_keyword(cur=None):
+    movie_id_movie_keyword = get_tuples_by_columns(['id', 'keywords'])
+    movie_id_keyword_id_tuples = []
+
+    for movie_id_movie_keyword_row in movie_id_movie_keyword:
+        movie_id = movie_id_movie_keyword_row[0]                       # Access movie id of the tuple
+        json_keyword_list = json.loads(movie_id_movie_keyword_row[1])  # Access genre list of the tuple
+
+        for json_keyword_id_name in json_keyword_list:                 # Iterate through the (id, name) objects
+            movie_id_keyword_id_tuples.append((int(movie_id), json_keyword_id_name['id']))
+
+    if cur:
+        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (?, ?);', movie_id_keyword_id_tuples)
+
+    print(f'Inserting {len(movie_id_keyword_id_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
+
+    return movie_id_keyword_id_tuples
 
 
 def insert_data():
-    conn = sqlite3.connect('db_server')  # change to 'sqlite:///your_filename.db'
-    cur = conn.cursor()
+    #conn = sqlite3.connect('db_server')  # change to 'sqlite:///your_filename.db'
+    #cur = conn.cursor()
 
-    insert_data_movies(cur)
-    insert_data_genre(cur)
-    insert_data_keyword(cur)
+    print(populate_movies()[:3])
+    print(populate_genre()[:3])
+    print(populate_keyword()[:3])
+    print(populate_movie_genre()[:3])
+    print(populate_movie_keyword()[:3])
 
-    conn.commit()
-    conn.close()
-
-
-get_unique_id_name(get_tuples_by_columns(['keywords']))
+    #conn.commit()
+    #conn.close()
 
 # TODO: Implement insert MovieGenre and insert MovieKeyword
+
+insert_data()
