@@ -6,7 +6,7 @@ conn = sqlite3.connect(database)
 cursor = conn.cursor()
 
 movies = f"CREATE TABLE Movies (id INTEGER NOT NULL" \
-         f"                     name VARCHAR NOT NULL" \
+         f"                     name VARCHAR NOT NULL UNIQUE" \
          f"                     voteAvg DOUBLE NOT NULL" \
          f"                     budget INTEGER NOT NULL" \
          f"                     revenue INTEGER NOT NULL" \
@@ -16,7 +16,7 @@ movies = f"CREATE TABLE Movies (id INTEGER NOT NULL" \
          f");"
 
 genre = f"CREATE TABLE Genre (id INTEGER NOT NULL" \
-         f"                   name VARCHAR NOT NULL" \
+         f"                   name VARCHAR NOT NULL UNIQUE" \
          f"PRIMARY KEY (id)" \
          f");"
 
@@ -27,7 +27,7 @@ movie_genre = f"CREATE TABLE MovieGenre (movie_id INTEGER NOT NULL" \
               f");"
 
 keywords = f"CREATE TABLE Keywords (id INTEGER NOT NULL" \
-           f"                       word VARCHAR NOT NULL" \
+           f"                       word VARCHAR NOT NULL UNIQUE" \
            f"CREATE INDEX key_word ON Keywords(word);" \
            f"PRIMARY KEY (id)" \
            f");"
