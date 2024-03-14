@@ -6,6 +6,13 @@ cursor = conn.cursor()
 
 
 def query_1(word):
+    """
+        This query retrieves movies associated with a given keyword.
+
+        Parameters: word (str): The keyword to search for.
+        Returns: str: SQL query string.
+        """
+
     query = f"SELECT DISTINCT Movies.name AS movies with the keyword '{word}'" \
             f"FROM Keywords, MovieKeywords, Movies" \
             f"WHERE Keywords.word = '{word}' AND Keywords.id = MovieKeywords.word_id AND " \
@@ -14,6 +21,13 @@ def query_1(word):
 
 
 def query_2(movie_name):
+    """
+    This query to retrieves all keywords associated with a given movie.
+
+    Parameters: movie_name (str): The name of the movie to search for.
+    Returns: str: SQL query string.
+
+    """
     query = f"SELECT Movies.name, Movies.voteAvg, Movies.budget, Movies.revenue, Genre.name, Keywords.word" \
             f"FROM Movies, Genre, MovieGenre, Keywords, MovieKeywords" \
             f"WHERE Movies.name = '{movie_name}' AND" \
