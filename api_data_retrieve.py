@@ -4,10 +4,10 @@ import mysql.connector as mysql
 
 CSV_FILE_NAME = 'tmdb_5000_movies.csv'
 MOVIES_TABLE_NAME = 'Movies'
-GENRES_TABLE_NAME = 'Genres'
+GENRES_TABLE_NAME = 'Genre'
 KEYWORDS_TABLE_NAME = 'Keywords'
 MOVIE_GENRE_TABLE_NAME = 'MovieGenre'
-MOVIE_KEYWORD_TABLE_NAME = 'MovieKeyword'
+MOVIE_KEYWORD_TABLE_NAME = 'MovieKeywords'
 
 
 def get_tuples_by_columns(column_list):
@@ -47,7 +47,7 @@ def populate_movies(cur=None):
     validate_unique_id(movie_tuples, 'movies')
     if cur:
         cur.executemany(
-            f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (%d, %s, %f, %d, %d);',
+            f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (%s, %s, %s, %s, %s);',
             movie_tuples)
 
     print(f'Inserting {len(movie_tuples)} rows to {MOVIES_TABLE_NAME}')
@@ -60,7 +60,7 @@ def populate_genre(cur=None):
     unique_genres_tuples = get_unique_id_name(all_genres)
     validate_unique_id(unique_genres_tuples, 'genres')
     if cur:
-        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (%d, %s);', unique_genres_tuples)
+        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (%s, %s);', unique_genres_tuples)
 
     print(f'Inserting {len(unique_genres_tuples)} rows to {GENRES_TABLE_NAME}')
 
@@ -73,7 +73,7 @@ def populate_keyword(cur=None):
     validate_unique_id(unique_keywords_tuples, 'keywords')
 
     if cur:
-        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, word) VALUES (%d, %s);', unique_keywords_tuples)
+        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, word) VALUES (%s, %s);', unique_keywords_tuples)
 
     print(f'Inserting {len(unique_keywords_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -92,7 +92,7 @@ def populate_movie_genre(cur=None):
             movie_id_genre_id_tuples.append((int(movie_id), json_genre_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (movie_id, genre_id) VALUES (%d, %d);', movie_id_genre_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (movie_id, genre_id) VALUES (%s, %s);', movie_id_genre_id_tuples)
 
     print(f'Inserting {len(movie_id_genre_id_tuples)} rows to {MOVIE_GENRE_TABLE_NAME}')
 
@@ -111,7 +111,7 @@ def populate_movie_keyword(cur=None):
             movie_id_keyword_id_tuples.append((int(movie_id), json_keyword_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (movie_id, word_id) VALUES (%d, %d);',
+        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (movie_id, word_id) VALUES (%s, %s);',
                         movie_id_keyword_id_tuples)
 
     print(f'Inserting {len(movie_id_keyword_id_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
@@ -134,6 +134,9 @@ def insert_data():
     print(populate_movie_keyword(cur)[:3])
 
     cur.close()
+
+    conn.commit()
+
     conn.close()
 
 

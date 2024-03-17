@@ -22,21 +22,21 @@ def main():
     cursor.execute(queries_db_script.query_1('family'))
 
     # example query no. 2
-    cursor.execute(queries_db_script.query_2('The Matrix'))
-    cursor.execute(queries_db_script.query_2('Avatar'))
-    cursor.execute(queries_db_script.query_2('The Hobbit'))
+    #cursor.execute(queries_db_script.query_2('The Matrix'))
+    """cursor.execute(queries_db_script.query_2('Avatar'))
+    cursor.execute(queries_db_script.query_2('The Hobbit'))"""
 
     # example query no. 3
-    cursor.execute(queries_db_script.query_3('horror', 100000000))
-    cursor.execute(queries_db_script.query_3('comedy', 500000000))
+    #cursor.execute(queries_db_script.query_3('horror', 100000000))
+    """cursor.execute(queries_db_script.query_3('comedy', 500000000))
     cursor.execute(queries_db_script.query_3('drama', 125000000))
-    cursor.execute(queries_db_script.query_3('science fiction', 1000000000))
+    cursor.execute(queries_db_script.query_3('science fiction', 1000000000))"""
 
     # example query no. 4
-    cursor.execute(queries_db_script.query_4('horror'))
-    cursor.execute(queries_db_script.query_4('comedy'))
+    #cursor.execute(queries_db_script.query_4('horror'))
+    """cursor.execute(queries_db_script.query_4('comedy'))
     cursor.execute(queries_db_script.query_4('drama'))
-    cursor.execute(queries_db_script.query_4('science fiction'))
+    cursor.execute(queries_db_script.query_4('science fiction'))"""
 
 
 
