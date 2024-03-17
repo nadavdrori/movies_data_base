@@ -73,7 +73,7 @@ def populate_keyword(cur=None):
     validate_unique_id(unique_keywords_tuples, 'keywords')
 
     if cur:
-        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (%d, %s);', unique_keywords_tuples)
+        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, word) VALUES (%d, %s);', unique_keywords_tuples)
 
     print(f'Inserting {len(unique_keywords_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -92,7 +92,7 @@ def populate_movie_genre(cur=None):
             movie_id_genre_id_tuples.append((int(movie_id), json_genre_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (%d, %s);', movie_id_genre_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (movie_id, genre_id) VALUES (%d, %d);', movie_id_genre_id_tuples)
 
     print(f'Inserting {len(movie_id_genre_id_tuples)} rows to {MOVIE_GENRE_TABLE_NAME}')
 
@@ -111,7 +111,7 @@ def populate_movie_keyword(cur=None):
             movie_id_keyword_id_tuples.append((int(movie_id), json_keyword_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (%d, %s);',
+        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (movie_id, word_id) VALUES (%d, %d);',
                         movie_id_keyword_id_tuples)
 
     print(f'Inserting {len(movie_id_keyword_id_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
