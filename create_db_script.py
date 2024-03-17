@@ -18,6 +18,7 @@ movies = f"CREATE TABLE Movies (id INTEGER NOT NULL," \
          f"                     voteAvg REAL NOT NULL," \
          f"                     budget BIGINT NOT NULL," \
          f"                     revenue BIGINT NOT NULL," \
+         f"                     profit BIGINT AS (revenue - budget), " \
          f"PRIMARY KEY (id)" \
          f");"
 
