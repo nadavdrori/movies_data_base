@@ -1,6 +1,6 @@
 import csv
 import json
-import sqlite3
+import mysql.connector as mysql
 
 CSV_FILE_NAME = 'tmdb_5000_movies.csv'
 MOVIES_TABLE_NAME = 'Movies'
@@ -46,7 +46,7 @@ def populate_movies(cur=None):
     movie_tuples = get_tuples_by_columns(['id', 'title', 'vote_average', 'budget', 'revenue'])
     validate_unique_id(movie_tuples, 'movies')
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (?, ?, ?, ?, ?);', movie_tuples)
+        cur.executemany(f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (%s, %s, %s, %s, %s);', movie_tuples)
 
     print(f'Inserting {len(movie_tuples)} rows to {MOVIES_TABLE_NAME}')
 
@@ -58,7 +58,7 @@ def populate_genre(cur=None):
     unique_genres_tuples = get_unique_id_name(all_genres)
     validate_unique_id(unique_genres_tuples, 'genres')
     if cur:
-        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (?, ?);', unique_genres_tuples)
+        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (%s, %s);', unique_genres_tuples)
 
     print(f'Inserting {len(unique_genres_tuples)} rows to {GENRES_TABLE_NAME}')
 
@@ -71,7 +71,7 @@ def populate_keyword(cur=None):
     validate_unique_id(unique_keywords_tuples, 'keywords')
 
     if cur:
-        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (?, ?);', unique_keywords_tuples)
+        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (%s, %s);', unique_keywords_tuples)
 
     print(f'Inserting {len(unique_keywords_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -90,7 +90,7 @@ def populate_movie_genre(cur=None):
             movie_id_genre_id_tuples.append((int(movie_id), json_genre_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (?, ?);', movie_id_genre_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (%s, %s);', movie_id_genre_id_tuples)
 
     print(f'Inserting {len(movie_id_genre_id_tuples)} rows to {MOVIE_GENRE_TABLE_NAME}')
 
@@ -109,7 +109,7 @@ def populate_movie_keyword(cur=None):
             movie_id_keyword_id_tuples.append((int(movie_id), json_keyword_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (?, ?);', movie_id_keyword_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (%s, ?%s);', movie_id_keyword_id_tuples)
 
     print(f'Inserting {len(movie_id_keyword_id_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -117,8 +117,12 @@ def populate_movie_keyword(cur=None):
 
 
 def insert_data():
-    #conn = sqlite3.connect('db_server')  # change to 'sqlite:///your_filename.db'
-    #cur = conn.cursor()
+    conn = mysql.connect(host='localhost',
+                         user='root',
+                         password='12345',
+                         db='nadavdb1',
+                         port=3306)
+    cur = conn.cursor()
 
     print(populate_movies()[:3])
     print(populate_genre()[:3])
@@ -126,9 +130,7 @@ def insert_data():
     print(populate_movie_genre()[:3])
     print(populate_movie_keyword()[:3])
 
-    #conn.commit()
-    #conn.close()
+    cur.close()
+    conn.close()
 
-# TODO: Implement insert MovieGenre and insert MovieKeyword
-
-insert_data()
+# insert_data()
