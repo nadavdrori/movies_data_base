@@ -1,5 +1,6 @@
 import mysql.connector as mysql
 
+# mysql -u nadavdrori -h mysqlsrv1.cs.tau.ac.il nadavdrori -p
 
 conn = mysql.connect(host='localhost',
                      user='root',

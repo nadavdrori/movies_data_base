@@ -46,7 +46,9 @@ def populate_movies(cur=None):
     movie_tuples = get_tuples_by_columns(['id', 'title', 'vote_average', 'budget', 'revenue'])
     validate_unique_id(movie_tuples, 'movies')
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (%s, %s, %s, %s, %s);', movie_tuples)
+        cur.executemany(
+            f'INSERT INTO {MOVIES_TABLE_NAME} (id, name, voteAvg, budget, revenue) VALUES (%d, %s, %f, %d, %d);',
+            movie_tuples)
 
     print(f'Inserting {len(movie_tuples)} rows to {MOVIES_TABLE_NAME}')
 
@@ -58,7 +60,7 @@ def populate_genre(cur=None):
     unique_genres_tuples = get_unique_id_name(all_genres)
     validate_unique_id(unique_genres_tuples, 'genres')
     if cur:
-        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (%s, %s);', unique_genres_tuples)
+        cur.executemany(f'INSERT INTO {GENRES_TABLE_NAME} (id, name) VALUES (%d, %s);', unique_genres_tuples)
 
     print(f'Inserting {len(unique_genres_tuples)} rows to {GENRES_TABLE_NAME}')
 
@@ -71,7 +73,7 @@ def populate_keyword(cur=None):
     validate_unique_id(unique_keywords_tuples, 'keywords')
 
     if cur:
-        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (%s, %s);', unique_keywords_tuples)
+        cur.executemany(f'INSERT INTO {KEYWORDS_TABLE_NAME} (id, name) VALUES (%d, %s);', unique_keywords_tuples)
 
     print(f'Inserting {len(unique_keywords_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -83,14 +85,14 @@ def populate_movie_genre(cur=None):
     movie_id_genre_id_tuples = []
 
     for movie_id_movie_genre_row in movie_id_movie_genre:
-        movie_id = movie_id_movie_genre_row[0]                     # Access movie id of the tuple
+        movie_id = movie_id_movie_genre_row[0]  # Access movie id of the tuple
         json_genre_list = json.loads(movie_id_movie_genre_row[1])  # Access genre list of the tuple
 
-        for json_genre_id_name in json_genre_list:                 # Iterate through the (id, name) objects
+        for json_genre_id_name in json_genre_list:  # Iterate through the (id, name) objects
             movie_id_genre_id_tuples.append((int(movie_id), json_genre_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (%s, %s);', movie_id_genre_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_GENRE_TABLE_NAME} (id, name) VALUES (%d, %s);', movie_id_genre_id_tuples)
 
     print(f'Inserting {len(movie_id_genre_id_tuples)} rows to {MOVIE_GENRE_TABLE_NAME}')
 
@@ -102,14 +104,15 @@ def populate_movie_keyword(cur=None):
     movie_id_keyword_id_tuples = []
 
     for movie_id_movie_keyword_row in movie_id_movie_keyword:
-        movie_id = movie_id_movie_keyword_row[0]                       # Access movie id of the tuple
+        movie_id = movie_id_movie_keyword_row[0]  # Access movie id of the tuple
         json_keyword_list = json.loads(movie_id_movie_keyword_row[1])  # Access genre list of the tuple
 
-        for json_keyword_id_name in json_keyword_list:                 # Iterate through the (id, name) objects
+        for json_keyword_id_name in json_keyword_list:  # Iterate through the (id, name) objects
             movie_id_keyword_id_tuples.append((int(movie_id), json_keyword_id_name['id']))
 
     if cur:
-        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (%s, ?%s);', movie_id_keyword_id_tuples)
+        cur.executemany(f'INSERT INTO {MOVIE_KEYWORD_TABLE_NAME} (id, name) VALUES (%d, %s);',
+                        movie_id_keyword_id_tuples)
 
     print(f'Inserting {len(movie_id_keyword_id_tuples)} rows to {MOVIE_KEYWORD_TABLE_NAME}')
 
@@ -124,13 +127,14 @@ def insert_data():
                          port=3306)
     cur = conn.cursor()
 
-    print(populate_movies()[:3])
-    print(populate_genre()[:3])
-    print(populate_keyword()[:3])
-    print(populate_movie_genre()[:3])
-    print(populate_movie_keyword()[:3])
+    print(populate_movies(cur)[:3])
+    print(populate_genre(cur)[:3])
+    print(populate_keyword(cur)[:3])
+    print(populate_movie_genre(cur)[:3])
+    print(populate_movie_keyword(cur)[:3])
 
     cur.close()
     conn.close()
 
-# insert_data()
+
+insert_data()

@@ -3,6 +3,7 @@
 import mysql.connector as mysql
 import queries_db_script
 
+# mysql -u nadavdrori -h mysqlsrv1.cs.tau.ac.il nadavdrori -p
 
 def main():
     conn = mysql.connect(host='localhost',
