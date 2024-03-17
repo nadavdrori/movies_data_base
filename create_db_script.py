@@ -4,8 +4,8 @@ import mysql.connector as mysql
 
 conn = mysql.connect(host='localhost',
                      user='root',
-                     password='123456',
-                     db='eddy_db',
+                     password='12345',
+                     db='nadavdb1',
                      port=3306)
 cursor = conn.cursor()
 
@@ -28,6 +28,8 @@ we did that in order to search for movies by name efficiently
 
 """
 movies_index = f"CREATE INDEX movie_name ON Movies(name);"
+
+movies_profit_index = f"CREATE INDEX movie_profit ON Movies(profit);"
 
 genre = f"CREATE TABLE Genre (id INTEGER NOT NULL," \
          f"                   name VARCHAR (100) NOT NULL UNIQUE," \
@@ -60,6 +62,7 @@ movie_keywords = f"CREATE TABLE MovieKeywords (movie_id INTEGER NOT NULL," \
 
 cursor.execute(movies)
 cursor.execute(movies_index)
+cursor.execute(movies_profit_index)
 cursor.execute(genre)
 cursor.execute(movie_genre)
 cursor.execute(keywords)
