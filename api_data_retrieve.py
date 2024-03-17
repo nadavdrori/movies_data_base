@@ -122,8 +122,8 @@ def populate_movie_keyword(cur=None):
 def insert_data():
     conn = mysql.connect(host='localhost',
                          user='root',
-                         password='12345',
-                         db='nadavdb1',
+                         password='123456',
+                         db='eddy_db',
                          port=3306)
     cur = conn.cursor()
 

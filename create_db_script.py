@@ -4,8 +4,8 @@ import mysql.connector as mysql
 
 conn = mysql.connect(host='localhost',
                      user='root',
-                     password='12345',
-                     db='nadavdb1',
+                     password='123456',
+                     db='eddy_db',
                      port=3306)
 cursor = conn.cursor()
 
