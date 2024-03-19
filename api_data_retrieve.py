@@ -119,25 +119,14 @@ def populate_movie_keyword(cur=None):
     return movie_id_keyword_id_tuples
 
 
-def insert_data():
-    conn = mysql.connect(host='localhost',
-                         user='root',
-                         password='12345',
-                         db='nadavdb1',
-                         port=3306)
+def populate_db(conn):
     cur = conn.cursor()
 
-    print(populate_movies(cur)[:3])
-    print(populate_genre(cur)[:3])
-    print(populate_keyword(cur)[:3])
-    print(populate_movie_genre(cur)[:3])
-    print(populate_movie_keyword(cur)[:3])
+    populate_movies(cur)
+    populate_genre(cur)
+    populate_keyword(cur)
+    populate_movie_genre(cur)
+    populate_movie_keyword(cur)
 
     cur.close()
-
     conn.commit()
-
-    conn.close()
-
-
-insert_data()
