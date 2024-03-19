@@ -1,4 +1,12 @@
+def sanitize_input(user_input_list):
+    for user_input in user_input_list:
+        # sanitize user_input
+        pass
+    return
+
+
 def query_1(keyword):
+    sanitize_input([keyword])
     """
     The following query retrieves movies associated with the input keyword.
 
@@ -14,6 +22,7 @@ def query_1(keyword):
 
 
 def query_2(search_term):
+    sanitize_input([search_term])
     """
     The following query retrieves all data associated with the movies that their title contains the search term.
 
@@ -31,6 +40,7 @@ def query_2(search_term):
 
 
 def query_3(genre, profit):
+    sanitize_input([genre, profit])
     """
     The following query retrieves all movies of the input genre with a profit equal or above the input profit.
 
@@ -53,6 +63,7 @@ def query_3(genre, profit):
 
 
 def query_4(genre):
+    sanitize_input([genre])
     """
     The following query calculates the average profit margin for movies from the input genre.
 
@@ -69,18 +80,19 @@ def query_4(genre):
 
 
 def query_5(lower_budget, upper_budget):
+    sanitize_input([lower_budget, upper_budget])
     """
     The following query returns the top genres of a movie for max audience satisfaction restrained to the input budget.
     """
 
-    query = f"with movies_under_budget_constraint as " \
-            f"(select id from movies where movies.budget <= {upper_budget} and movies.budget > {lower_budget})" \
-            f"select genre.name, avg(movies.voteAvg) as vote_avg " \
-            f"from movies, moviegenre, genre " \
-            f"where movie_id in (select id from movies_under_budget_constraint) " \
-            f"and movies.id = moviegenre.movie_id " \
-            f"and genre.id = moviegenre.genre_id " \
-            f"group by genre.name " \
-            f"order by vote_avg desc " \
+    query = f"WITH movies_under_budget_constraint AS " \
+            f"(SELECT id FROM Movies WHERE Movies.budget <= {upper_budget} AND Movies.budget > {lower_budget})" \
+            f"SELECT Genre.name, avg(Movies.voteAvg) AS vote_avg " \
+            f"FROM Movies, MovieGenre, Genre " \
+            f"WHERE movie_id IN (SELECT id FROM movies_under_budget_constraint) " \
+            f"AND Movies.id = MovieGenre.movie_id " \
+            f"AND Genre.id = MovieGenre.genre_id " \
+            f"GROUP BY Genre.name " \
+            f"ORDER BY vote_avg DESC " \
 
     return query

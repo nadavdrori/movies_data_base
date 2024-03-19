@@ -24,8 +24,8 @@ def main():
     # Clean DB - in case this script is being called when the DB is already set.
     '''try:
         create_db_script.clean_db(conn)
-    except:
-        pass'''
+    except Exception as e:
+        print(f'Failed to clean DB\nError msg: {e}')'''
 
     # DB creation
     '''try:

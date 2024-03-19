@@ -19,7 +19,7 @@ def create_db(conn):
 
     movies_profit_index = f"CREATE INDEX movie_profit ON Movies(profit);"
 
-    movies_budget_index = f"CREATE INDEX movie_profit ON Movies(budget);"
+    movies_budget_index = f"CREATE INDEX movie_budget ON Movies(budget);"
 
     genre = f"CREATE TABLE Genre (id INTEGER NOT NULL," \
              f"                   name VARCHAR (100) NOT NULL UNIQUE," \
@@ -64,6 +64,6 @@ def create_db(conn):
 
 def clean_db(conn):
     cursor = conn.cursor()
-    clean_cmd = 'DROP TABLE moviekeywords; DROP TABLE moviegenre; DROP TABLE movies; DROP TABLE genre; DROP TABLE keywords;'
+    clean_cmd = 'DROP TABLE MovieKeywords; DROP TABLE MovieGenre; DROP TABLE Movies; DROP TABLE Genre; DROP TABLE Keywords;'
     cursor.execute(clean_cmd)
     cursor.close()
