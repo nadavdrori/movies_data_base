@@ -28,16 +28,16 @@ def main():
         pass'''
 
     # DB creation
-    try:
+    '''try:
         create_db_script.create_db(conn)
     except Exception as e:
-        print(f'Failed to build DB\nError msg: {e}')
+        print(f'Failed to build DB\nError msg: {e}')'''
 
     # DB population
-    try:
+    '''try:
         api_data_retrieve.populate_db(conn)
     except Exception as e:
-        print(f'Failed to populate DB\nError msg: {e}')
+        print(f'Failed to populate DB\nError msg: {e}')'''
 
     # Execution examples
     cursor = conn.cursor()

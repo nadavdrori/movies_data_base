@@ -1,9 +1,6 @@
 def create_db(conn):
     cursor = conn.cursor()
 
-    """
-    Movies table -
-    """
     movies = f"CREATE TABLE Movies (id INTEGER NOT NULL," \
              f"                     name VARCHAR (100) NOT NULL," \
              f"                     voteAvg REAL NOT NULL," \
@@ -39,9 +36,8 @@ def create_db(conn):
                f");"
 
     """ 
-    This line creates an index on the 'word' column of the 'Keywords' table,
+    This part creates an index on the 'word' column of the 'Keywords' table,
     we did that in order to search efficiently for words associated with certain movies 
-    
     """
     keywords_index = f"CREATE FULLTEXT INDEX key_word ON Keywords(word);"
 
