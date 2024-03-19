@@ -19,6 +19,8 @@ def create_db(conn):
 
     movies_profit_index = f"CREATE INDEX movie_profit ON Movies(profit);"
 
+    movies_budget_index = f"CREATE INDEX movie_profit ON Movies(budget);"
+
     genre = f"CREATE TABLE Genre (id INTEGER NOT NULL," \
              f"                   name VARCHAR (100) NOT NULL UNIQUE," \
              f"PRIMARY KEY (id)" \
@@ -50,6 +52,7 @@ def create_db(conn):
     cursor.execute(movies)
     cursor.execute(movies_index)
     cursor.execute(movies_profit_index)
+    cursor.execute(movies_budget_index)
     cursor.execute(genre)
     cursor.execute(movie_genre)
     cursor.execute(keywords)
